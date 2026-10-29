@@ -212,7 +212,7 @@ footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);color:v
  <h2 id="srcTitle">Source</h2>
  <div class="srcbar">
   <button class="srcbtn" id="srcBack">← Back to builds</button>
-  <a class="srcbtn pri" id="srcRun" href="#">Run this build</a>
+  <a class="srcbtn pri" id="srcRun" href="#">Open source</a>
   <a class="srcbtn" id="srcDl" href="#" download>Download</a>
   <button class="srcbtn" id="srcCopy">Copy all</button>
   <a class="srcbtn" id="srcDiff" href="#">Diff vs previous</a>
@@ -602,9 +602,10 @@ function vaultBytes(it){
       return b})})
   .then(function(b){VCACHE[it.id]=b;return b});
 }
+function vmime(f){f=(f||"").toLowerCase();if(/\.html?$/.test(f))return"text/html;charset=utf-8";if(/\.(js|mjs|json|css|txt|md|py|ts)$/.test(f))return"text/plain;charset=utf-8";return"application/octet-stream"}
 function vaultURL(it){
  return vaultBytes(it).then(function(b){
-   return URL.createObjectURL(new Blob([b],{type:"text/html;charset=utf-8"}))});
+   return URL.createObjectURL(new Blob([b],{type:vmime(it&&it.file)}))});
 }
 function saveVault(it,d){
  if(!it)return;
@@ -621,7 +622,7 @@ function wireVaultButtons(it,d){
  run.onclick=function(ev){ev.preventDefault();
   if(!it){alert("This build is not in the vault.");return}
   run.textContent="Decrypting\u2026";
-  vaultURL(it).then(function(u){run.textContent="Run";window.open(u,"_blank","noopener")})
+  vaultURL(it).then(function(u){run.textContent="Open source";window.open(u,"_blank","noopener")})
    .catch(function(e){run.textContent="Run";alert("Could not decrypt that: "+(e&&e.message||""))})};
  dl.onclick=function(ev){ev.preventDefault();saveVault(it,d)};
 }
