@@ -1,313 +1,705 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%230b0b0c%27/%3E%3Ccircle cx=%278%27 cy=%278%27 r=%274%27 fill=%27none%27 stroke=%27%2300e5ff%27 stroke-width=%271.4%27/%3E%3C/svg%3E"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SourceGrab — Build vault</title>
-<meta name="robots" content="noindex">
-<style>
-:root{--bg:#0b0b0c;--pane:#141417;--pane2:#1a1a1d;--line:#2a2a2e;--ink:#f4f4f5;--dim:#9a9aa2;--gold:#00e5ff;--acc:#e6e6e8}
-:root[data-theme="alt"]{--bg:#07131a;--pane:#0c1f2a;--pane2:#102734;--line:#1d3a47;--ink:#eafcff;--dim:#8fb8c6;--acc:#00e5ff}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-a{color:inherit}
-.wrap{max-width:1040px;margin:0 auto;padding:30px 20px 80px}
-header .kicker{color:var(--gold);letter-spacing:.22em;text-transform:uppercase;font-size:11px}
-header h1{font-size:30px;margin:6px 0 4px;font-weight:650}
-header h1 span{color:var(--dim);font-weight:400}
-.sub{color:var(--dim);max-width:720px}
-.topmail{float:right;color:var(--dim);font-size:12px;text-decoration:none}
-.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px}
-.bbtn{display:inline-block;padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:var(--pane);text-decoration:none;font-size:13px}
-.bbtn:hover{border-color:var(--gold)}
-.bbtn.ghost{background:transparent}
-nav.tabs{display:flex;gap:6px;margin:26px 0 18px;border-bottom:1px solid var(--line)}
-nav.tabs a{padding:9px 14px;text-decoration:none;color:var(--dim);border-bottom:2px solid transparent;font-size:13px}
-nav.tabs a.on{color:var(--ink);border-bottom-color:var(--gold)}
-main{animation:fade .25s ease}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:8px 0 22px}
-.stat{background:var(--pane);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.stat b{display:block;font-size:22px}
-.stat span{color:var(--dim);font-size:12px}
-#chartbox{background:var(--pane);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:10px}
-#chart{width:100%;height:150px;display:block}
-.cnote{color:var(--dim);font-size:12px;margin-top:6px}
-.toolbar{display:flex;gap:10px;align-items:center;margin:4px 0 14px;flex-wrap:wrap}
-input,select{background:var(--pane);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 11px;font:inherit}
-input#q{flex:1;min-width:180px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
-th{color:var(--dim);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
-td.num{text-align:right;white-space:nowrap}
-.seq{color:var(--dim)}
-.ver{font-weight:600}
-.sizebar{display:inline-block;height:7px;background:var(--gold);opacity:.5;border-radius:4px;margin-right:7px;vertical-align:middle}
-.acts a{margin-right:11px;text-decoration:none;color:var(--gold);font-size:12px}
-.acts a:hover{text-decoration:underline}
-#cnt{color:var(--dim);font-size:12px}
-.empty{color:var(--dim);padding:24px 4px}
-#view-source pre{background:var(--pane);border:1px solid var(--line);border-radius:12px;padding:14px;max-height:62vh;overflow:auto;font-size:12px;white-space:pre;tab-size:2}
-.srcbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-.srcbar .meta{color:var(--dim);font-size:12px;margin-left:auto}
-.hidden{display:none}
-/* lock */
-#vlock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%230a0a0a%27/%3E%3Ccircle cx=%278%27 cy=%278%27 r=%274%27 fill=%27none%27 stroke=%27%2300e5ff%27 stroke-width=%271.4%27/%3E%3C/svg%3E"><title>SourceGrab — build vault</title><meta name="description" content="Complete build history of SourceGrab — every build encrypted, runnable and downloadable, with growth charts."><style>
+:root{--mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;--bg:#0a0a0a;--panel:#111;--panel2:#161616;--line:#262626;--line2:#333;--fg:#f2f2f2;--dim:#9a9a9a;--faint:#5c5c5c;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font:14px/1.55 var(--mono);font-variant-numeric:tabular-nums}
+a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2);transition:border-color .15s var(--ease),color .15s var(--ease)}
+a:hover{border-color:var(--fg)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px calc(96px + env(safe-area-inset-bottom,0px))}
+header{padding:52px 0 30px;border-bottom:1px solid var(--line);position:relative}
+.topmail{position:absolute;top:20px;right:0;color:var(--dim);font-size:12px;border-bottom:1px solid var(--line);text-decoration:none}
+.topmail:hover{color:var(--fg)}
+.kicker{color:var(--faint);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+h1{font-size:clamp(26px,5vw,38px);font-weight:700;letter-spacing:-.01em}
+h1 span{color:var(--dim);font-weight:400}
+.sub{color:var(--dim);margin-top:10px;max-width:640px}
+.sub b{color:var(--fg);font-weight:600}
+.btnrow{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.bbtn{background:var(--fg);color:#000;border:0;font:inherit;font-weight:700;padding:10px 16px;cursor:pointer;text-decoration:none;transition:transform .12s var(--ease)}
+.bbtn:active{transform:scale(.96)}
+.bbtn.ghost{background:none;color:var(--dim);border:1px solid var(--line2)}
+.bbtn.ghost:hover{color:var(--fg);border-color:var(--fg)}
+main[hidden]{display:none}
+main{min-height:60vh}
+html{background:var(--bg)}
+body{min-height:100vh}
+@keyframes tpage{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+main{opacity:1}
+.pageanim{animation:tpage .3s var(--ease) both}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:32px 0}
+.stat{background:var(--panel);padding:18px 16px;opacity:1}
+.anim-ok .stat{animation:rise .3s var(--ease) both}
+.stat:nth-child(1){animation-delay:.02s}.stat:nth-child(2){animation-delay:.07s}.stat:nth-child(3){animation-delay:.12s}
+.stat:nth-child(4){animation-delay:.17s}.stat:nth-child(5){animation-delay:.22s}.stat:nth-child(6){animation-delay:.27s}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.stat .n{font-size:24px;font-weight:700}.stat .l{color:var(--faint);font-size:11.5px;margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:40px 0 14px;font-weight:600}
+h2 small{color:var(--faint);text-transform:none;letter-spacing:0;font-weight:400;margin-left:10px}
+.ctoggle{display:inline-flex;border:1px solid var(--line2);margin-left:12px;vertical-align:middle}
+.ctoggle button{background:none;border:0;color:var(--dim);font:inherit;font-size:11.5px;padding:4px 10px;cursor:pointer;transition:background .15s,color .15s,transform .12s}
+.ctoggle button.on{background:var(--fg);color:#000;font-weight:700}
+.ctoggle button:active{transform:scale(.96)}
+.chartbox{border:1px solid var(--line);background:var(--panel);padding:14px 14px 6px;position:relative}
+.chartbox svg{display:block;width:100%;height:auto}
+.bar{fill:#3d3d3d;transition:fill .12s}.bar:hover{fill:#f2f2f2}
+.bar.clip{fill:#222;stroke:#4a4a4a;stroke-dasharray:3 3}
+.tip{position:absolute;pointer-events:none;background:#000;border:1px solid var(--line2);padding:7px 10px;font-size:12px;opacity:0;transform:translateY(3px);transition:opacity .12s,transform .12s;white-space:nowrap;z-index:5}
+.tip.on{opacity:1;transform:none}.tip b{font-weight:700}.tip .d{color:var(--dim)}
+.chartnote{color:var(--faint);font-size:12px;padding:10px 2px 8px}
+.milestones{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.mile{background:var(--panel);padding:16px}.mile .mv{font-weight:700}.mile .mt{color:var(--dim);font-size:12.5px;margin-top:5px}
+.toolrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.search{flex:1;min-width:220px;background:var(--panel);border:1px solid var(--line2);color:var(--fg);font:inherit;padding:10px 12px;outline:none;transition:border-color .15s}
+.search:focus{border-color:var(--fg)}.search::placeholder{color:var(--faint)}
+.count{color:var(--faint);font-size:12.5px;white-space:nowrap}
+.sortsel{background:var(--panel);border:1px solid var(--line2);color:var(--dim);font:inherit;font-size:12.5px;padding:10px 8px;outline:none;cursor:pointer}
+table{width:100%;border-collapse:collapse;border:1px solid var(--line)}
+thead th{background:var(--panel2);color:var(--faint);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:600}
+tbody td{padding:9px 12px;border-bottom:1px solid #1c1c1c;font-size:13px}
+tbody tr{transition:background .12s}tbody tr:hover{background:#151515}
+td.num{color:var(--dim)}td .seq{color:var(--faint)}td .ver{font-weight:700}
+.acts{display:flex;gap:12px;white-space:nowrap}
+.acts a{border-bottom:none;color:var(--dim);font-size:12px}
+.acts a:hover{color:var(--fg)}.acts a::before{content:"→ ";color:var(--faint)}
+.sizebar{display:inline-block;height:7px;background:#3d3d3d;vertical-align:middle;margin-right:8px;min-width:1px}
+tr:hover .sizebar{background:var(--fg)}
+.spike{color:var(--fg);font-weight:700}
+.empty{color:var(--faint);text-align:center;padding:32px 0;display:none}
+.cards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--panel);padding:15px 16px;text-decoration:none;border-bottom:none;transition:background .12s}
+.crow:hover{background:#161616}
+.crow .ct{font-weight:700}.crow .cd{color:var(--faint);font-size:12px;margin-top:3px}
+.crow .arr{color:var(--faint);font-size:16px;flex:none;transition:transform .15s var(--ease)}
+.crow:hover .arr{transform:translateX(3px);color:var(--fg)}
+.readme{border:1px solid var(--line);background:var(--panel);padding:20px}
+.readme h3{font-size:14px;margin:18px 0 8px}.readme h3:first-child{margin-top:0}
+.readme p{color:var(--dim);margin:8px 0;max-width:70ch}.readme p.li{margin:4px 0}
+.readme b{color:var(--fg)}.readme code{background:#1a1a1a;border:1px solid var(--line);padding:1px 5px;font-size:12px}
+.readme .rt{width:100%;border-collapse:collapse;margin:12px 0;border:1px solid var(--line)}
+.readme .rt th,.readme .rt td{border:1px solid var(--line);padding:8px 10px;font-size:12.5px;text-align:left}
+.readme .rt th{background:var(--panel2);color:var(--faint)}
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px}
+.tbar-pad{height:calc(78px + env(safe-area-inset-bottom,0px))}
+.tbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(420px,100vw - 24px);border-radius:18px;background:#161616;border:1px solid #2e2e2e;display:flex;z-index:90;box-shadow:0 8px 30px rgba(0,0,0,.5);isolation:isolate}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.tbar{background:rgba(18,18,18,.82);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}}
+.tbar .tpill{position:absolute;top:5px;bottom:5px;border-radius:13px;background:#2c2c2c;transition:left .32s var(--ease),width .32s var(--ease)}
+.tbar button{flex:1;min-height:50px;background:none;border:0;color:#9a9a9a;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;transition:color .2s,transform .12s var(--ease)}
+.tbar button:active{transform:scale(.93)}
+.tbar button .ic{font-size:16px;line-height:1;transition:transform .32s cubic-bezier(.34,1.56,.64,1)}
+.tbar button .lb{font-size:10.5px;letter-spacing:.04em}
+.tbar button[aria-selected="true"]{color:#f2f2f2}
+.tbar button[aria-selected="true"] .ic{transform:translateY(-1px) scale(1.16)}
+
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.cell{background:var(--panel);padding:12px 13px;text-decoration:none;color:var(--fg);display:block;border-bottom:none;transition:background .12s var(--ease)}
+.cell:hover{background:#1a1a1a}
+.cn{display:block;font-weight:700;font-size:13px;word-break:break-all}
+.ci{display:block;color:var(--faint);font-size:11px;margin-top:4px}
+.ci em{font-style:normal}.ci em.ok{color:var(--fg);font-weight:700}
+.catnav{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px;font-size:12px}
+.catnav button{background:none;border:1px solid var(--line);color:var(--dim);font:inherit;font-size:12px;padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s,transform .12s}
+.catnav button:hover{color:var(--fg);border-color:var(--fg)}
+.catnav button:active{transform:scale(.96)}
+.catnav button b{color:var(--fg)}
+.crd{border:1px solid var(--line);background:var(--panel);padding:22px;max-width:640px}
+.crd .crd-k{color:var(--faint);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.crd .nm{font-size:22px;font-weight:700;margin:8px 0 4px}
+.crd .rl{color:var(--dim);margin-bottom:16px}
+.crow2{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding:13px 0;flex-wrap:wrap}
+.crow2>span.lbl{color:var(--faint);width:70px;flex:none;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.crow2 code{word-break:break-all;font-size:12px;flex:1;min-width:180px}
+.cpy{background:none;border:1px solid var(--line2);color:var(--dim);font:inherit;font-size:11px;padding:5px 11px;cursor:pointer;transition:transform .12s,color .15s,border-color .15s}
+.cpy:hover{color:var(--fg);border-color:var(--fg)}.cpy:active{transform:scale(.93)}
+
+.srcbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.srcbtn{background:none;border:1px solid var(--line2);color:var(--dim);font:inherit;font-size:12.5px;padding:8px 13px;cursor:pointer;text-decoration:none;transition:color .15s,border-color .15s,transform .12s var(--ease)}
+.srcbtn:hover{color:var(--fg);border-color:var(--fg)}
+.srcbtn:active{transform:scale(.96)}
+.srcbtn.pri{background:var(--fg);color:#000;border-color:var(--fg);font-weight:700}
+.srcmeta{color:var(--faint);font-size:12px;margin-bottom:12px}
+.srcmeta b{color:var(--dim);font-weight:400}
+.codewrap{border:1px solid var(--line);background:#0d0d0d;overflow:auto;max-height:70vh;position:relative}
+.codewrap table{border:0;width:auto;min-width:100%}
+.codewrap td{border:0;padding:0;font-size:12px;line-height:1.5;vertical-align:top;white-space:pre}
+.lnum{color:#3a3a3a;text-align:right;padding:0 12px 0 14px!important;-webkit-user-select:none;user-select:none;position:sticky;left:0;background:#0d0d0d;border-right:1px solid var(--line)!important}
+.lcode{padding:0 16px 0 14px!important;color:#cfcfcf}
+.codewrap tr:hover .lcode{background:#141414}
+.codewrap tr:hover .lnum{color:var(--dim)}
+.srcload{padding:16px;text-align:center;color:var(--faint);font-size:12.5px}
+.srcmore{margin-top:12px;text-align:center}
+.tk{color:#8a8a8a}
+@media(max-width:640px){.acts{flex-direction:column;gap:4px}thead th:nth-child(4),tbody td:nth-child(4){display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.btt{position:fixed;right:14px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:42px;height:42px;border-radius:12px;background:#161616;background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid #2e2e2e;color:#f2f2f2;font:inherit;font-size:16px;cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .2s cubic-bezier(.22,1,.36,1),transform .2s cubic-bezier(.22,1,.36,1);z-index:89}
+.btt.show{opacity:1;transform:none;pointer-events:auto}
+.btt:active{transform:scale(.9)}
+
+/* ---- vault lock ---------------------------------------------------- */
+#vlock{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  background:#0a0a0a;padding:20px}
 #vlock.off{display:none}
-.vbox{max-width:440px;width:100%;background:var(--pane);border:1px solid var(--line);border-radius:16px;padding:30px}
-.vbox h1{margin:0 0 10px;font-size:22px}
-.vbox p{color:var(--dim);font-size:13px}
-#vpw{width:100%;margin:14px 0 6px}
-.vmsg{min-height:18px;font-size:12px;color:var(--dim)}
-.vmsg.bad{color:#e07a7a}
-#vgo{width:100%;padding:11px;border:1px solid var(--gold);background:var(--gold);color:#02121a;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
-#vgo:disabled{opacity:.5;cursor:default}
-.themeBtn{position:fixed;right:14px;bottom:14px;z-index:60;background:var(--pane);border:1px solid var(--line);color:var(--dim);border-radius:20px;padding:6px 12px;font:12px ui-monospace,monospace;cursor:pointer}
+#vlock .vbox{width:min(420px,100%);border:1px solid #2e2e2e;background:#111;border-radius:14px;padding:28px}
+#vlock h1{font-size:17px;margin:0 0 7px}
+#vlock p{font-size:12px;color:#8a8a8a;line-height:1.7;margin:0 0 18px}
+#vlock input{width:100%;padding:13px 14px;border-radius:9px;border:1px solid #3a3a3a;background:#0a0a0a;
+  color:#f2f2f2;font:14px inherit;letter-spacing:.14em;box-sizing:border-box}
+#vlock input:focus{outline:0;border-color:#6a6a6a}
+#vlock .vrow{display:flex;gap:9px;margin-top:13px}
+#vlock button{flex:1;padding:12px;border-radius:9px;border:1px solid #f2f2f2;background:#f2f2f2;color:#0a0a0a;
+  font:12px inherit;font-weight:700;cursor:pointer}
+#vlock button:disabled{opacity:.5;cursor:default}
+#vlock .vmsg{min-height:16px;font-size:11.5px;color:#9a9a9a;margin:10px 0 0}
+#vlock .vmsg.bad{color:#e8a0a0}
+.vpad{padding:22px;text-align:center;color:#8a8a8a;font-size:12.5px}
 </style></head><body>
-
-<div id="vlock"><div class="vbox">
-  <div class="kicker" style="color:var(--gold);letter-spacing:.22em;text-transform:uppercase;font-size:11px">SourceGrab</div>
-  <h1>Build vault</h1>
-  <p>Every build and source file behind this prompt is encrypted with AES&#8209;256&#8209;GCM. The password is not
-     checked against a stored copy &mdash; it derives the key. A wrong one is not turned away; it simply opens nothing.</p>
-  <input id="vpw" type="password" autocomplete="off" spellcheck="false" placeholder="password" aria-label="Owner password">
-  <p class="vmsg" id="vmsg" role="status"></p>
-  <button type="button" id="vgo">Unlock</button>
-</div></div>
-
-<div class="wrap">
+<div id="vlock">
+  <div class="vbox">
+    <h1>Build vault</h1>
+    <p>Every build, source file and archive behind this prompt is encrypted with AES&#8209;256&#8209;GCM.
+       The password is not checked against a stored copy &mdash; it derives the key. A wrong one does not
+       get turned away, it simply opens nothing.</p>
+    <input id="vpw" type="password" autocomplete="off" spellcheck="false" placeholder="password"
+           aria-label="Owner password">
+    <p class="vmsg" id="vmsg" role="status"></p>
+    <div class="vrow"><button type="button" id="vgo">Unlock</button></div>
+  </div>
+</div><div class="wrap">
 <header>
  <a class="topmail" href="mailto:67ace67a@gmail.com">67ace67a@gmail.com</a>
  <div class="kicker">Semtexhigh</div>
- <h1>SourceGrab <span>/ Build vault</span></h1>
- <p class="sub">The encrypted build history of SourceGrab &mdash; a Chrome extension that captures a web page&#8217;s full source (DOM, shadow roots, scripts, CSS, globals, storage, network) and bundles it for an AI.
-    <b id="hdrCount">—</b> builds from <b id="hdrFirst">—</b> to <b id="hdrLast">—</b>, every one encrypted on this page.</p>
+ <h1>SourceGrab <span>/ page source for an AI</span></h1>
+ <p class="sub">The complete build history of SourceGrab — a Chrome extension that captures a web page’s full source and bundles it for an AI. <b>4 builds</b> from <b>v1.0.0</b> to <b>v3.2.4</b>, every one of them encrypted on this page.</p>
  <div class="btnrow">
-  <a class="bbtn" id="openLatest" href="#builds">Open latest</a>
-  <a class="bbtn ghost" href="#builds">Browse all builds</a>
-  <a class="bbtn ghost" href="./">← SourceGrab download site</a>
+  <a class="bbtn" id="openLatest" href="#">Open latest — v3.2.4</a>
+  <a class="bbtn ghost" href="#builds" data-tab="1">Browse all builds</a>
  </div>
 </header>
 
-<nav class="tabs">
- <a href="#home" data-v="home" class="on">Overview</a>
- <a href="#builds" data-v="builds">Builds</a>
- <a href="#source" data-v="source" id="tabSource" style="display:none">Source</a>
+<main id="view-home">
+ <p id="vaultTag" style="font-size:11.5px;color:var(--faint);margin:0 0 14px">&nbsp;</p>
+ <div class="stats" id="stats"></div>
+ <h2>Current source <small>decrypted in this tab, checked against its hash</small></h2>
+ <div id="vaultExtras" style="margin:0 0 26px"><div class="vpad">unlocking…</div></div>
+ <h2>Growth over 4 builds
+  <span class="ctoggle" role="tablist"><button id="btnLines" class="on">lines</button><button id="btnBytes">size</button></span>
+  <span class="ctoggle" id="spikeTog" style="display:none" role="tablist" aria-label="Spike toggle"><button id="spWith" class="on">with v3.2–v4.8 spike</button><button id="spWithout">without</button></span>
+  <small id="chartLabel">code lines per build</small></h2>
+ <div class="chartbox" id="chartbox">
+  <svg id="chart" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-label="Growth chart"></svg>
+  <div class="tip" id="tip"></div><div class="chartnote" id="chartnote"></div>
+ </div>
+ <h2>Milestones</h2>
+ <div class="milestones" id="miles"></div>
+</main>
+
+<main id="view-builds" hidden>
+ <h2>All builds <small>newest first — open runs it, save downloads it</small></h2>
+ <div class="toolrow">
+  <input class="search" id="q" type="search" placeholder="Filter by version… e.g. v23, 100, 38.4" aria-label="Filter builds">
+  <select class="sortsel" id="sort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="big">Largest first</option></select>
+  <span class="count" id="cnt"></span>
+ </div>
+ <table><thead><tr><th>Build</th><th>Size</th><th>Lines</th><th>Δ lines</th><th>Links</th></tr></thead><tbody id="rows"></tbody></table>
+ <div class="empty" id="empty">No builds match.</div>
+</main>
+
+
+
+
+
+<main id="view-source" hidden>
+ <h2 id="srcTitle">Source</h2>
+ <div class="srcbar">
+  <button class="srcbtn" id="srcBack">← Back to builds</button>
+  <a class="srcbtn pri" id="srcRun" href="#">Run this build</a>
+  <a class="srcbtn" id="srcDl" href="#" download>Download</a>
+  <button class="srcbtn" id="srcCopy">Copy all</button>
+  <a class="srcbtn" id="srcDiff" href="#">Diff vs previous</a>
+ </div>
+ <div class="srcmeta" id="srcMeta"></div>
+ <div class="codewrap" id="codewrap"><div class="srcload">Loading source…</div></div>
+ <div class="srcmore" id="srcMore"></div>
+</main>
+<main id="view-credits" hidden>
+ <h2>Credits</h2>
+ <div class="crd">
+  <div class="crd-k">Semtexhigh</div>
+  <div class="nm">Semtexhigh</div>
+  <div class="rl">Built SourceGrab — 4 builds from v1.0.0 to v3.2.4, from a console paste-in script to a packaged Chrome extension. Every build is encrypted on this page.</div>
+  <div class="crow2"><span class="lbl">Email</span><a href="mailto:67ace67a@gmail.com">67ace67a@gmail.com</a></div>
+  <div class="crow2"><span class="lbl">GitHub</span><a href="https://github.com/Semtexhigh">github.com/Semtexhigh</a></div>
+  
+  <div class="crow2"><span class="lbl">Solana</span><code id="solad">8gShJdd29gLhwuB2uxf8K63EGQkYrdYSeWJSWFSyXgfx</code><button class="cpy" id="solcp">copy</button></div>
+ </div>
+ <h2>Everything on this project</h2>
+ <div class="cards"><a class='crow' href='#builds' data-tab='1'><span><span class='ct'>Open latest build</span><div class='cd'>SourceGrab v3.2.4 — the packaged Chrome extension content script</div></span><span class='arr'>→</span></a><a class='crow' href='#builds' data-tab='1'><span><span class='ct'>All 4 builds</span><div class='cd'>Browse, run, save and read the source of every version</div></span><span class='arr'>→</span></a></div>
+ <h2>README</h2>
+ <div class="readme"><h3>SourceGrab — build history</h3><p>4 builds, <b>v1.0.0 to v3.2.4</b>, oldest to newest. Files are numbered <code>001</code> upward so they sort chronologically. Every build and its source stays encrypted on this page.</p><h3>Feature milestones</h3><table class="rt"><tr><th>Version</th><th>What arrived</th></tr><tr><td>v1.0.0</td><td>console paste-in source grabber</td></tr><tr><td>v1.1.0</td><td>rubbish removal + input filters (token savings)</td></tr><tr><td>v2.0.0</td><td>Stark HUD interface</td></tr><tr><td>v3.2.4</td><td>Chrome extension: node-sphere reactor, 7 themes, 17 languages, element picker, right-click grab, offline .html save</td></tr></table><h3>Every build</h3><table class="rt"><tr><th>#</th><th>Version</th><th>Size</th><th>Lines</th></tr><tr><td>001</td><td>v1.0.0</td><td>69 KB</td><td>815 lines</td></tr><tr><td>002</td><td>v1.1.0</td><td>78 KB</td><td>931 lines</td></tr><tr><td>003</td><td>v2.0.0</td><td>89 KB</td><td>1,054 lines</td></tr><tr><td>004</td><td>v3.2.4</td><td>122 KB</td><td>1,374 lines</td></tr></table></div>
+</main>
+
+<footer>SourceGrab · Semtexhigh · served entirely client-side</footer>
+</div>
+<div class="tbar-pad"></div>
+<nav class="tbar" role="tablist" aria-label="Site navigation"><span class="tpill" id="tpill"></span>
+<button role="tab" aria-selected="true"><span class="ic">⌂</span><span class="lb">Home</span></button>
+<button role="tab" aria-selected="false"><span class="ic">▤</span><span class="lb">Builds</span></button>
+<button role="tab" aria-selected="false"><span class="ic">✳</span><span class="lb">Credits</span></button>
 </nav>
 
-<main id="view-home">
- <div class="stats">
-  <div class="stat"><b id="stBuilds">—</b><span>encrypted builds</span></div>
-  <div class="stat"><b id="stLatest">—</b><span>latest version</span></div>
-  <div class="stat"><b id="stLines">—</b><span>lines, latest build</span></div>
-  <div class="stat"><b id="stCipher">—</b><span>ciphertext stored</span></div>
- </div>
- <div id="chartbox">
-  <svg id="chart" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-label="Build size over time"></svg>
-  <div class="cnote">Single-file app size across every build (bytes). Click a bar to open that build's source.</div>
- </div>
- <p id="vaultTag" class="cnote"></p>
-</main>
-
-<main id="view-builds" class="hidden">
- <div class="toolbar">
-  <input id="q" placeholder="Filter by version…" aria-label="Filter builds">
-  <select id="sort" aria-label="Sort">
-   <option value="old">Oldest first</option>
-   <option value="new">Newest first</option>
-   <option value="big">Largest first</option>
-  </select>
-  <span id="cnt"></span>
- </div>
- <table><thead><tr><th>Build</th><th class="num">Size</th><th class="num">Lines</th><th class="num">Δ bytes</th><th>Actions</th></tr></thead>
- <tbody id="rows"></tbody></table>
- <div class="empty hidden" id="empty">No builds match.</div>
-</main>
-
-<main id="view-source" class="hidden">
- <div class="srcbar">
-  <a class="bbtn ghost" href="#builds" id="srcBack">← Back</a>
-  <a class="bbtn" href="#" id="srcRun">Open</a>
-  <a class="bbtn ghost" href="#" id="srcDl">Download</a>
-  <a class="bbtn ghost" href="#" id="srcCopy">Copy</a>
-  <span class="meta" id="srcMeta"></span>
- </div>
- <h2 id="srcTitle" style="font-size:18px;margin:0 0 10px"></h2>
- <pre id="code">Decrypting…</pre>
- <p class="cnote" id="srcMore"></p>
-</main>
-</div>
-
-<button class="themeBtn" id="themeBtn">THEME</button>
-
 <script>
+/* build index and module catalogue, inlined so the gated page needs
+   no companion files on the public site */
+const VERSIONS=[{"seq":"001","ver":"v1.0.0","file":"001 - SourceGrab v1.0.0 (console).js","bytes":70643,"lines":815,"sha":"b4189c8367"},{"seq":"002","ver":"v1.1.0","file":"002 - SourceGrab v1.1.0 (rubbish + filters).js","bytes":79815,"lines":931,"sha":"b55e7f9b29"},{"seq":"003","ver":"v2.0.0","file":"003 - SourceGrab v2.0.0 (Stark HUD).js","bytes":90850,"lines":1054,"sha":"e72a9078f7"},{"seq":"004","ver":"v3.2.4","file":"004 - SourceGrab v3.2.4 (extension content.js).js","bytes":124452,"lines":1374,"sha":"040830abb0"}];
+const MODCATS=[];
+</script><script>
+(function(){
+"use strict";
+var REPO="https://github.com/Semtexhigh/FinanceCalc";
+var V=(typeof VERSIONS!=="undefined")?VERSIONS:[];
 var $=function(id){return document.getElementById(id)};
-var VERSIONS=[{"seq":"001","ver":"v1.0.0","file":"001 - SourceGrab v1.0.0 (console).js","bytes":70643,"lines":815,"sha":"b4189c8367"},{"seq":"002","ver":"v1.1.0","file":"002 - SourceGrab v1.1.0 (rubbish + filters).js","bytes":79815,"lines":931,"sha":"b55e7f9b29"},{"seq":"003","ver":"v2.0.0","file":"003 - SourceGrab v2.0.0 (Stark HUD).js","bytes":90850,"lines":1054,"sha":"e72a9078f7"},{"seq":"004","ver":"v3.2.4","file":"004 - SourceGrab v3.2.4 (extension content.js).js","bytes":124452,"lines":1374,"sha":"040830abb0"}];
-var V=VERSIONS.slice();
-var HASH=["home","builds","source"];
+if(!V.length){var e=$("empty");if(e)e.style.display="block";return;}
+function fmtB(b){if(b>=1048576)return (b/1048576).toFixed(1)+" MB";if(b>=1024)return (b/1024|0)+" KB";return b+" B"}
+function fmtN(n){try{return n.toLocaleString("en-US")}catch(e){var s=String(n),o="";while(s.length>3){o=","+s.slice(-3)+o;s=s.slice(0,-3)}return s+o}}
+function enc(f){return encodeURIComponent(f)}
+var SPIKE_LIMIT=2097152;
+var totB=0,totL=0,maxB=0,maxL=0,maxB2=0;
+V.forEach(function(d){totB+=d.bytes;totL+=d.lines;if(d.bytes>maxB)maxB=d.bytes;if(d.lines>maxL)maxL=d.lines;
+ if(d.bytes<=SPIKE_LIMIT&&d.bytes>maxB2)maxB2=d.bytes;});
+var first=V[0],last=V[V.length-1];
 
-/* ---------- formatting ---------- */
-function fmtN(n){return (n||0).toLocaleString()}
-function fmtB(n){if(n==null)return"";var u=["B","KB","MB","GB"],i=0;n=+n;while(n>=1024&&i<3){n/=1024;i++}return (i?n.toFixed(n<10?1:0):n)+" "+u[i]}
+/* ===== views + touch bar (4 tabs, one app) ===== */
+/* ===== visibility safety net =====
+   Content is visible by default in CSS; animations are opt-in via .anim-ok.
+   Anything that could strand an element mid-animation is swept clean. */
+function sweepAnim(){
+ try{
+  [].slice.call(document.querySelectorAll(".pageanim")).forEach(function(el){
+   el.classList.remove("pageanim"); el.style.opacity=""; el.style.transform="";
+  });
+ }catch(e){}
+}
+function revealAll(){
+ try{
+  sweepAnim();
+  [].slice.call(document.querySelectorAll(".stat")).forEach(function(el){
+   el.style.opacity="1"; el.style.transform="none"; el.style.animation="none";
+  });
+  var v=views[sel]; if(v){v.hidden=false; v.style.opacity="1"; v.style.transform="none"}
+ }catch(e){}
+}
+try{
+ if(window.addEventListener){
+  window.addEventListener("error",function(){revealAll()});
+  window.addEventListener("unhandledrejection",function(){revealAll()});
+ }
+}catch(e){}
+
+var views=[$("view-home"),$("view-builds"),$("view-credits"),$("view-source")];
+var HASH=["home","builds","credits","source"];
+var bs=[].slice.call(document.querySelectorAll(".tbar button"));
+var pill=$("tpill"),sel=0,modsBuilt=false;
+function align(i){var b=bs[i];if(!b||!pill)return;pill.style.left=(b.offsetLeft||0)+"px";pill.style.width=(b.offsetWidth||0)+"px"}
+function anim(el){if(!el)return;
+ try{
+  el.classList.remove("pageanim");void el.offsetWidth;el.classList.add("pageanim");
+  var done=function(){el.classList.remove("pageanim");el.removeEventListener("animationend",done)};
+  el.addEventListener("animationend",done);
+  setTimeout(done,700);
+ }catch(e){el.classList.remove("pageanim")}}
+function show(i,noHash){
+ sel=i;var lit=(i===4?1:i);
+ bs.forEach(function(b,j){b.setAttribute("aria-selected",j===lit?"true":"false")});align(lit);
+ views.forEach(function(v,j){if(v)v.hidden=(j!==i)});
+ 
+ anim(views[i]);
+ if(!noHash&&window.history&&history.replaceState){try{history.replaceState(null,"","#"+HASH[i])}catch(e){}}
+ try{window.scrollTo(0,0)}catch(e){}
+ try{if(document.documentElement)document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0}catch(e){}
+}
+bs.forEach(function(b,i){b.addEventListener("click",function(){show(i)})});
+if(window.addEventListener){window.addEventListener("resize",function(){align(sel)});
+ window.addEventListener("load",function(){align(sel)});
+ window.addEventListener("hashchange",function(){var k=HASH.indexOf((location.hash||"").replace("#",""));if(k>=0&&k!==sel)show(k,true)});}
+[].slice.call(document.querySelectorAll("[data-tab]")).forEach(function(a){
+ a.addEventListener("click",function(ev){ev.preventDefault();show(+this.getAttribute("data-tab"))})});
+/* deep link runs at the very end, after every function it needs exists */
+/* copy solana */
+$("solcp").addEventListener("click",function(){var b=this;
+ (navigator.clipboard?navigator.clipboard.writeText($("solad").textContent):Promise.reject())
+ .then(function(){b.textContent="copied \u2713";setTimeout(function(){b.textContent="copy"},1200)},function(){b.textContent="select it"})});
+
+
+/* ===== in-site source viewer (no GitHub round-trip) ===== */
+var SRC={cur:null,lines:[],shown:0,CHUNK:2500};
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function renderChunk(){
+ var wrap=$("codewrap"),tbl=wrap.querySelector("table");
+ if(!tbl){wrap.innerHTML="<table><tbody></tbody></table>";tbl=wrap.querySelector("table")}
+ var tb=tbl.querySelector("tbody"),end=Math.min(SRC.lines.length,SRC.shown+SRC.CHUNK),html="";
+ for(var i=SRC.shown;i<end;i++){
+  html+="<tr><td class='lnum'>"+(i+1)+"</td><td class='lcode'>"+esc(SRC.lines[i])+"</td></tr>";
+ }
+ tb.insertAdjacentHTML("beforeend",html);
+ SRC.shown=end;
+ var more=$("srcMore");
+ if(SRC.shown<SRC.lines.length){
+  more.innerHTML='<button class="srcbtn" id="srcMoreBtn">Show '+Math.min(SRC.CHUNK,SRC.lines.length-SRC.shown).toLocaleString()+' more lines \u00b7 '+(SRC.lines.length-SRC.shown).toLocaleString()+' remaining</button>';
+  $("srcMoreBtn").addEventListener("click",renderChunk);
+ } else { more.innerHTML='<span style="color:var(--faint);font-size:12px">End of file \u00b7 '+SRC.lines.length.toLocaleString()+' lines</span>' }
+}
+function openSource(idx){
+ var d=V[idx];SRC.cur=d;SRC.lines=[];SRC.shown=0;
+ $("srcTitle").textContent="SourceGrab "+d.ver;
+ $("srcMeta").innerHTML="build "+d.seq+" of "+V.length+" \u00b7 <b>"+fmtB(d.bytes)+"</b> \u00b7 <b>"+fmtN(d.lines)+" lines</b> \u00b7 single-file HTML";
+ var it=vaultItem(d.file);
+ wireVaultButtons(it,d);
+ var dv=$("srcDiff");
+ if(d.prev){dv.style.display="";dv.href=REPO+"/compare/"+d.prev+"..."+d.sha}else{dv.style.display="none"}
+ $("srcMore").innerHTML="";
+ show(3);
+ if(d.bytes>3145728){
+  $("codewrap").innerHTML='<div class="srcload">This build is <b>'+fmtB(d.bytes)+'</b> \u2014 large enough to slow down or crash a browser tab if rendered in full.<br><br>'+
+   '<button class="srcbtn" id="srcForce">Decrypt it anyway</button> &nbsp; <button class="srcbtn" id="srcForceDl">Decrypt and download</button></div>';
+  var fb=$("srcForce");
+  if(fb)fb.addEventListener("click",function(){$("codewrap").innerHTML='<div class="srcload">Decrypting '+fmtB(d.bytes)+'\u2026</div>';loadSrcVault(it,d)});
+  var fd=$("srcForceDl");
+  if(fd)fd.addEventListener("click",function(){saveVault(it,d)});
+  return;
+ }
+ $("codewrap").innerHTML='<div class="srcload">Decrypting '+fmtB(d.bytes)+' of source\u2026</div>';
+ loadSrcVault(it,d);
+}
+function loadSrcVault(it,d){
+ if(!it){$("codewrap").innerHTML='<div class="srcload">This build is not in the vault.</div>';return}
+ vaultBytes(it).then(function(b){
+   var t=new TextDecoder("utf-8",{fatal:false}).decode(b);
+   SRC.text=t;SRC.lines=t.split("\n");$("codewrap").innerHTML="";renderChunk();
+ }).catch(function(e){
+   $("codewrap").innerHTML='<div class="srcload">Could not decrypt this build ('+(e&&e.message||"unknown")+').</div>';
+ });
+}
+$("srcBack").addEventListener("click",function(){show(1)});
+$("srcCopy").addEventListener("click",function(){var b=this;
+ (navigator.clipboard&&SRC.text?navigator.clipboard.writeText(SRC.text):Promise.reject())
+ .then(function(){b.textContent="Copied \u2713";setTimeout(function(){b.textContent="Copy all"},1400)},
+       function(){b.textContent="Use Download instead";setTimeout(function(){b.textContent="Copy all"},1800)})});
+/* delegate: source links inside the builds table */
+$("rows").addEventListener("click",function(ev){
+ var a=ev.target;
+ if(!a||!a.getAttribute)return;
+ if(a.getAttribute("data-src")!==null){ev.preventDefault();openSource(+a.getAttribute("data-src"));return}
+ if(a.getAttribute("data-run")!==null){
+  ev.preventDefault();
+  var d=V[+a.getAttribute("data-run")],it=vaultItem(d.file);
+  if(!it){alert("That build is not in the vault.");return}
+  a.textContent="\u2026";
+  vaultURL(it).then(function(u){a.textContent="open";window.open(u,"_blank","noopener")})
+   .catch(function(e){a.textContent="open";alert("Could not decrypt that: "+(e&&e.message||""))});
+  return;
+ }
+ if(a.getAttribute("data-save")!==null){
+  ev.preventDefault();
+  var dd=V[+a.getAttribute("data-save")];
+  saveVault(vaultItem(dd.file),dd);
+ }
+});
+
+/* ===== modules view ===== */
+var MC=(typeof MODCATS!=="undefined")?MODCATS:[];
+var mTotal=0;MC.forEach(function(c){mTotal+=c.m.length});
+function buildModules(){
+ if(!MC||!MC.length){MC=(typeof MODCATS!=="undefined")?MODCATS:[]}
+ if(!MC||!MC.length){$("mcnt").textContent="module list unavailable";return}
+ var nav="",body="";
+ MC.forEach(function(c){
+  nav+='<button data-go="'+c.k+'">'+c.l+' <b>'+c.m.length+'</b></button>';
+  body+='<h2 id="cat-'+c.k+'">'+c.l+' <small>'+c.m.length+' modules</small></h2><div class="mgrid" data-cat="'+c.k+'">';
+  c.m.forEach(function(m){
+   var badge=m[4]?'<em class="ok">'+(m[2]==="JS"?"runs clean":"valid")+'</em>':'<em>needs app ctx</em>';
+   body+='<span class="cell" title="'+m[1].replace(/"/g,"&quot;")+'" data-s="'+String(m[0]).toLowerCase().replace(/"/g,"&quot;")+'">'+
+    '<span class="cn">'+m[0].replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'+
+    '<span class="ci">'+m[2]+' \u00b7 '+m[3]+' \u00b7 '+badge+'</span></span>';
+  });
+  body+='</div>';
+ });
+ $("catnav").innerHTML=nav;$("modwrap").innerHTML=body;
+ $("mcnt").textContent=mTotal+" modules";
+ [].slice.call($("catnav").querySelectorAll("button")).forEach(function(b){
+  b.addEventListener("click",function(){var t=document.getElementById("cat-"+this.getAttribute("data-go"));
+   if(t&&t.scrollIntoView){try{t.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){t.scrollIntoView()}}})});
+ $("mq").addEventListener("input",function(){
+  var v=this.value.trim().toLowerCase(),n=0;
+  [].slice.call($("modwrap").querySelectorAll(".cell")).forEach(function(c){
+   var hit=!v||c.dataset.s.indexOf(v)>=0;c.style.display=hit?"":"none";if(hit)n++});
+  [].slice.call($("modwrap").querySelectorAll(".mgrid")).forEach(function(g){
+   var any=[].slice.call(g.querySelectorAll(".cell")).some(function(c){return c.style.display!=="none"});
+   g.style.display=any?"":"none";var h=g.previousElementSibling;if(h&&h.tagName==="H2")h.style.display=any?"":"none"});
+  $("mcnt").textContent=n+" of "+mTotal+" modules";
+  $("mempty").style.display=n?"none":"block";
+ });
+}
+
+/* enable entrance animations only once the page is actually showing */
+try{
+ if(window.requestAnimationFrame){
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+   try{ if(sel===0 && !views[0].hidden) document.body.classList.add("anim-ok"); }catch(e){}
+   setTimeout(sweepAnim,900);
+  })});
+ }
+}catch(e){}
+
+/* ===== stats ===== */
+var stats=[[V.length,"builds",1],[parseFloat(String(last.ver).replace("v","")),"final version",10],[Math.round(totB/1024),"KB of source",1],
+ [totL,"total lines",1],[last.lines,"lines in "+last.ver,1],[Math.round(last.lines/first.lines*10)/10,"growth since v1.0",10]];
+var sEl=$("stats");
+stats.forEach(function(s){var d=document.createElement("div");d.className="stat";
+ d.innerHTML='<div class="n" data-t="'+s[0]+'" data-m="'+s[2]+'">0</div><div class="l">'+s[1]+"</div>";sEl.appendChild(d)});
+var reduce=(window.matchMedia?matchMedia("(prefers-reduced-motion: reduce)").matches:false);
+[].slice.call(document.querySelectorAll(".stat .n")).forEach(function(el){
+ var t=parseFloat(el.dataset.t),m=+el.dataset.m;
+ function showv(v){el.textContent=(m===10?v.toFixed(1):fmtN(Math.round(v)))+("")}
+ if(reduce||!window.requestAnimationFrame){showv(t);return}
+ var st=null,dur=700;
+ (function step(ts){if(ts===undefined){requestAnimationFrame(step);return}if(!st)st=ts;var k=Math.min(1,(ts-st)/dur);k=1-Math.pow(1-k,3);showv(t*k);if(k<1)requestAnimationFrame(step)})();
+});
+
+/* ===== chart with spike toggle ===== */
+var svg=$("chart"),tip=$("tip"),box=$("chartbox");
+var mode="lines",spikeOn=true;
+function draw(){
+ var W=1000,H=260,pad=4,n=V.length,bw=(W-pad*2)/n;
+ var mx=mode==="lines"?maxL:(spikeOn?maxB:maxB2);
+ var out=[];
+ for(var i=0;i<n;i++){var d=V[i],val=mode==="lines"?d.lines:d.bytes;
+  var clipped=(mode==="bytes"&&!spikeOn&&d.bytes>SPIKE_LIMIT);
+  var h=clipped?(H-10):Math.max(2,(val/mx)*(H-10));
+  out.push('<rect class="bar'+(clipped?' clip':'')+'" data-i="'+i+'" x="'+(pad+i*bw).toFixed(2)+'" y="'+(H-h).toFixed(2)+'" width="'+Math.max(1,bw-1).toFixed(2)+'" height="'+h.toFixed(2)+'"></rect>');}
+ svg.innerHTML=out.join("");
+ $("chartLabel").textContent=mode==="lines"?"code lines per build":"file size per build";
+ var st=$("spikeTog");if(st)st.style.display=(mode==="bytes")?"inline-flex":"none";
+ $("chartnote").textContent=mode==="lines"
+  ?"From "+fmtN(first.lines)+" lines ("+first.ver+") to "+fmtN(last.lines)+" lines ("+last.ver+")."
+  :"Single-file source size across every build, "+first.ver+" to "+last.ver+".";
+}
+try{draw()}catch(e){revealAll()}
+svg.addEventListener("mousemove",function(e){var t=e.target;
+ if(!t.classList||!t.classList.contains("bar")){tip.classList.remove("on");return}
+ var d=V[+t.dataset.i];
+ tip.innerHTML="<b>"+d.ver+"</b> <span class='d'>build "+d.seq+"</span><br>"+fmtN(d.lines)+" lines \u00B7 "+fmtB(d.bytes);
+ var r=box.getBoundingClientRect();
+ var x=Math.min(e.clientX-r.left+12,Math.max(0,r.width-tip.offsetWidth-8));
+ tip.style.left=x+"px";tip.style.top=(e.clientY-r.top-44)+"px";tip.classList.add("on")});
+svg.addEventListener("mouseleave",function(){tip.classList.remove("on")});
+function setMode(m,btnOn,btnOff){mode=m;$(btnOn).classList.add("on");$(btnOff).classList.remove("on");draw()}
+$("btnLines").addEventListener("click",function(){setMode("lines","btnLines","btnBytes")});
+$("btnBytes").addEventListener("click",function(){setMode("bytes","btnBytes","btnLines")});
+$("spWith").addEventListener("click",function(){spikeOn=true;this.classList.add("on");$("spWithout").classList.remove("on");draw()});
+$("spWithout").addEventListener("click",function(){spikeOn=false;this.classList.add("on");$("spWith").classList.remove("on");draw()});
+
+/* ===== milestones ===== */
+var miles=[["v1.0.0","Where it started — "+fmtN(first.lines)+" lines, "+fmtB(first.bytes)+", a console paste-in grabber."],["v1.1.0","Rubbish removal with token-savings, plus simple input filters."],["v2.0.0","The Stark HUD interface arrives."],["v3.2.4","Latest: "+fmtN(last.lines)+" lines, "+fmtB(last.bytes)+" — the packaged Chrome extension (node-sphere reactor, 7 themes, 17 languages, element picker, offline .html save)."]];
+$("miles").innerHTML=miles.map(function(m){return '<div class="mile"><div class="mv">'+m[0]+'</div><div class="mt">'+m[1]+"</div></div>"}).join("");
+
+/* ===== builds table ===== */
+var rowsEl=$("rows"),cnt=$("cnt"),empty=$("empty"),q="",sortMode="new";
+function delta(i){if(i===0)return null;return V[i].lines-V[i-1].lines}
+function render(){
+ var list=V.map(function(d,i){return{d:d,i:i}});
+ if(q){var Q=q.toLowerCase();list=list.filter(function(r){return r.d.ver.toLowerCase().indexOf(Q)>=0||r.d.seq.indexOf(Q)>=0})}
+ if(sortMode==="new")list.reverse();else if(sortMode==="big")list.sort(function(a,b){return b.d.bytes-a.d.bytes});
+ rowsEl.innerHTML=list.map(function(r){var d=r.d,dl=delta(r.i);
+  var dTxt=dl===null?'<span class="seq">\u2014</span>':(dl>=0?"+":"\u2212")+fmtN(Math.abs(dl));
+  var sp=d.bytes>SPIKE_LIMIT?' class="spike"':"";
+  var w=Math.max(1,Math.round(d.bytes/maxB*90));
+  var diff=d.prev?'<a href="'+REPO+"/compare/"+d.prev+"..."+d.sha+'">diff</a>':"";
+  return "<tr><td><span class='seq'>"+d.seq+"</span> <span class='ver'>"+d.ver+"</span></td>"+
+   "<td class='num'><span class='sizebar' style='width:"+w+"px'></span><span"+sp+">"+fmtB(d.bytes)+"</span></td>"+
+   "<td class='num'>"+fmtN(d.lines)+"</td><td class='num'>"+dTxt+"</td>"+
+   "<td><span class='acts'><a href='#' data-run='"+r.i+"'>open</a>"+
+   "<a href='#' data-save='"+r.i+"'>save</a>"+
+   "<a href='#source' data-src='"+r.i+"'>source</a>"+diff+"</span></td></tr>"}).join("");
+ cnt.textContent=list.length+" / "+V.length;
+ empty.style.display=list.length?"none":"block";}
+$("q").addEventListener("input",function(){q=this.value.trim();render()});
+$("sort").addEventListener("change",function(){sortMode=this.value;render()});
+try{render()}catch(e){revealAll()}
+
+/* ---- deep link, last: every function above now exists ---- */
+try{
+ var _k=HASH.indexOf((location.hash||"").replace("#",""));
+ if(_k>0) show(_k,true);
+}catch(e){ revealAll(); }
 
 /* =====================================================================
-   The vault — PBKDF2-SHA256 over the typed password unwraps one random
-   AES-256-GCM data key; that key decrypts every payload. Nothing is
-   compared against a stored secret: a wrong password fails to decrypt a
-   small blob and nothing large is fetched. Decrypted bytes stay in this
-   tab only.  (Engine identical to the one proven on the FinanceCalc vault.)
+   the vault - PBKDF2-SHA256 over the typed password against each slot,
+   AES-GCM to unwrap one random data key, and that key decrypts every
+   payload.  Nothing here is compared against a stored secret: a wrong
+   password fails to decrypt a 48-byte blob and nothing large is fetched
+   to find out.  Decrypted bytes are held in this tab only.
    ===================================================================== */
-var VMAN=null,VKEY=null,VCACHE={};
-function vb64(x){var b=atob(String(x).replace(/\s+/g,""));var u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+var VMAN=null, VKEY=null, VCACHE={};
+
+function vb64(x){var b=atob(String(x).replace(/\s+/g,""));var u=new Uint8Array(b.length);
+ for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
 function vutf8(x){return new TextEncoder().encode(x)}
-function vsubtle(){var c=window.crypto&&window.crypto.subtle;if(!c)throw new Error("this browser has no Web Crypto — open the page over https");return c}
-function vhex(b){var v=new Uint8Array(b),o="";for(var i=0;i<v.length;i++)o+=(v[i]<16?"0":"")+v[i].toString(16);return o}
-function vgunzip(buf){
- if(typeof DecompressionStream==="undefined")return Promise.reject(new Error("this browser cannot un-gzip — needs Safari 16.4+, Chrome 80+"));
- var st=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));
- return new Response(st).arrayBuffer().then(function(a){return new Uint8Array(a)});
-}
+function vsubtle(){var c=window.crypto&&window.crypto.subtle;
+ if(!c)throw new Error("this browser has no Web Crypto - open the page over https");return c}
+
 function vunwrap(pw,man){
  var names=Object.keys(man.slots||{}),i=0,c=vsubtle();
  function attempt(){
   if(i>=names.length)return Promise.reject(new Error("no"));
   var sl=man.slots[names[i++]];
   return c.importKey("raw",vutf8(pw),{name:"PBKDF2"},false,["deriveKey"])
-   .then(function(base){return c.deriveKey({name:"PBKDF2",salt:vb64(sl.salt),iterations:man.iterations||310000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"])})
+   .then(function(base){return c.deriveKey({name:"PBKDF2",salt:vb64(sl.salt),
+      iterations:man.iterations||310000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"])})
    .then(function(wk){return c.decrypt({name:"AES-GCM",iv:vb64(sl.iv)},wk,vb64(sl.ct))})
    .then(function(raw){return c.importKey("raw",raw,{name:"AES-GCM"},false,["decrypt"])})
    .catch(attempt);
  }
  return attempt();
 }
-function vaultItem(file){if(!VMAN)return null;for(var i=0;i<VMAN.items.length;i++)if(VMAN.items[i].file===file)return VMAN.items[i];return null}
+function vgunzip(buf){
+ if(typeof DecompressionStream==="undefined")
+  return Promise.reject(new Error("this browser cannot un-gzip - Safari 16.4+, Chrome 80+"));
+ var st=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));
+ return new Response(st).arrayBuffer().then(function(a){return new Uint8Array(a)});
+}
+function vhex(b){var v=new Uint8Array(b),o="";for(var i=0;i<v.length;i++)o+=(v[i]<16?"0":"")+v[i].toString(16);return o}
+
+function vaultItem(file){
+ if(!VMAN)return null;
+ for(var i=0;i<VMAN.items.length;i++) if(VMAN.items[i].file===file) return VMAN.items[i];
+ return null;
+}
+/* fetch (in parts when the payload was split) -> decrypt -> un-gzip ->
+   check the hash.  The id is bound in as additional data, so one blob
+   cannot be served in place of another. */
 function vaultBytes(it){
  if(!it)return Promise.reject(new Error("not in the vault"));
  if(VCACHE[it.id])return Promise.resolve(VCACHE[it.id]);
  if(!VKEY)return Promise.reject(new Error("locked"));
- var base="./vault/"+(VMAN.dir||"b")+"/"+it.id+".enc";
- return fetch(base,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("blob missing ("+r.status+")");return r.arrayBuffer()})
-  .then(function(ct){return vsubtle().decrypt({name:"AES-GCM",iv:vb64(it.iv),additionalData:vutf8(it.id)},VKEY,ct)})
+ var base="./vault/"+(VMAN.dir||"b")+"/"+it.id+".enc", urls=[base], n;
+ if(it.parts){urls=[];for(n=0;n<it.parts;n++)urls.push(base+"."+n)}
+ return Promise.all(urls.map(function(u){
+   return fetch(u,{cache:"no-store"}).then(function(r){
+     if(!r.ok)throw new Error("blob missing ("+r.status+")");return r.arrayBuffer()})}))
+  .then(function(bufs){
+    if(bufs.length===1)return bufs[0];
+    var t=0,i;for(i=0;i<bufs.length;i++)t+=bufs[i].byteLength;
+    var j=new Uint8Array(t),at=0;
+    for(i=0;i<bufs.length;i++){j.set(new Uint8Array(bufs[i]),at);at+=bufs[i].byteLength}
+    return j.buffer})
+  .then(function(ct){return vsubtle().decrypt({name:"AES-GCM",iv:vb64(it.iv),
+     additionalData:vutf8(it.id)},VKEY,ct)})
   .then(function(gz){return it.gz?vgunzip(gz):new Uint8Array(gz)})
-  .then(function(b){if(!it.sha256)return b;return vsubtle().digest("SHA-256",b).then(function(d){if(vhex(d)!==it.sha256)throw new Error("decrypted file does not match its hash");return b})})
+  .then(function(b){
+    if(!it.sha256)return b;
+    return vsubtle().digest("SHA-256",b).then(function(d){
+      if(vhex(d)!==it.sha256)throw new Error("decrypted file does not match its hash");
+      return b})})
   .then(function(b){VCACHE[it.id]=b;return b});
 }
-function vmime(f){f=(f||"").toLowerCase();if(/\.html?$/.test(f))return"text/html;charset=utf-8";if(/\.(js|mjs|json|css|txt|md|py|ts)$/.test(f))return"text/plain;charset=utf-8";return"application/octet-stream"}
-function vaultURL(it){return vaultBytes(it).then(function(b){return URL.createObjectURL(new Blob([b],{type:vmime(it&&it.file)}))})}
-function saveVault(it){
+function vaultURL(it){
+ return vaultBytes(it).then(function(b){
+   return URL.createObjectURL(new Blob([b],{type:"text/html;charset=utf-8"}))});
+}
+function saveVault(it,d){
+ if(!it)return;
  vaultBytes(it).then(function(b){
   var u=URL.createObjectURL(new Blob([b],{type:"application/octet-stream"}));
-  var a=document.createElement("a");a.href=u;a.download=it.file;a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
+  var a=document.createElement("a");a.href=u;a.download=(d&&d.file)||it.file;a.rel="noopener";
+  document.body.appendChild(a);a.click();a.remove();
   setTimeout(function(){URL.revokeObjectURL(u)},4000);
  }).catch(function(e){alert("Could not decrypt that: "+(e&&e.message||"unknown error"))});
 }
-
-/* ---------- views / routing ---------- */
-function showView(name){
- ["home","builds","source"].forEach(function(n){var el=$("view-"+n);if(el)el.classList.toggle("hidden",n!==name)});
- [].forEach.call(document.querySelectorAll("nav.tabs a"),function(a){a.classList.toggle("on",a.getAttribute("data-v")===name)});
- if(window.history&&history.replaceState){try{history.replaceState(null,"","#"+name)}catch(e){}}
- window.scrollTo(0,0);
-}
-[].forEach.call(document.querySelectorAll("nav.tabs a"),function(a){a.addEventListener("click",function(e){e.preventDefault();showView(a.getAttribute("data-v"))})});
-$("openLatest").addEventListener("click",function(e){e.preventDefault();showView("builds")});
-[].forEach.call(document.querySelectorAll('.btnrow a[href="#builds"]'),function(a){a.addEventListener("click",function(e){e.preventDefault();showView("builds")})});
-$("srcBack").addEventListener("click",function(e){e.preventDefault();showView("builds")});
-
-/* ---------- home ---------- */
-function paintHome(){
- var n=V.length,last=V[n-1]||{},first=V[0]||{};
- $("hdrCount").textContent=n; $("hdrFirst").textContent=first.ver||"—"; $("hdrLast").textContent=last.ver||"—";
- $("stBuilds").textContent=n; $("stLatest").textContent=last.ver||"—"; $("stLines").textContent=fmtN(last.lines);
- // chart
- var maxB=1;V.forEach(function(d){if(d.bytes>maxB)maxB=d.bytes});
- var W=1000,H=150,bw=W/n,svg="";
- V.forEach(function(d,i){
-  var h=Math.max(2,Math.round(d.bytes/maxB*(H-18)));
-  svg+='<rect x="'+(i*bw+2).toFixed(1)+'" y="'+(H-h)+'" width="'+(bw-4).toFixed(1)+'" height="'+h+'" rx="2" fill="var(--gold)" opacity="0.55" style="cursor:pointer"><title>'+d.ver+' · '+fmtB(d.bytes)+'</title></rect>';
- });
- $("chart").innerHTML=svg;
- [].forEach.call($("chart").querySelectorAll("rect"),function(r,i){r.addEventListener("click",function(){openSource(i)})});
+function wireVaultButtons(it,d){
+ var run=$("srcRun"),dl=$("srcDl");
+ run.setAttribute("href","#");dl.setAttribute("href","#");dl.removeAttribute("download");
+ run.onclick=function(ev){ev.preventDefault();
+  if(!it){alert("This build is not in the vault.");return}
+  run.textContent="Decrypting\u2026";
+  vaultURL(it).then(function(u){run.textContent="Run";window.open(u,"_blank","noopener")})
+   .catch(function(e){run.textContent="Run";alert("Could not decrypt that: "+(e&&e.message||""))})};
+ dl.onclick=function(ev){ev.preventDefault();saveVault(it,d)};
 }
 
-/* ---------- builds list ---------- */
-var q="",sortMode="old";
-function render(){
- var list=V.map(function(d,i){return {d:d,i:i}});
- if(q){var ql=q.toLowerCase();list=list.filter(function(r){return (r.d.ver||"").toLowerCase().indexOf(ql)>=0})}
- if(sortMode==="new")list=list.slice().reverse();
- else if(sortMode==="big")list=list.slice().sort(function(a,b){return b.d.bytes-a.d.bytes});
- var maxB=1;V.forEach(function(d){if(d.bytes>maxB)maxB=d.bytes});
- $("rows").innerHTML=list.map(function(r){
-  var d=r.d,i=r.i,prev=V[i-1],dl=prev?d.bytes-prev.bytes:null;
-  var dTxt=dl===null?'<span class="seq">—</span>':(dl>=0?"+":"−")+fmtN(Math.abs(dl));
-  var w=Math.max(1,Math.round(d.bytes/maxB*90));
-  return "<tr><td><span class='seq'>"+d.seq+"</span> <span class='ver'>"+d.ver+"</span></td>"+
-   "<td class='num'><span class='sizebar' style='width:"+w+"px'></span>"+fmtB(d.bytes)+"</td>"+
-   "<td class='num'>"+fmtN(d.lines)+"</td><td class='num'>"+dTxt+"</td>"+
-   "<td><span class='acts'><a href='#' data-run='"+i+"'>open</a><a href='#' data-save='"+i+"'>save</a><a href='#source' data-src='"+i+"'>source</a></span></td></tr>";
- }).join("");
- $("cnt").textContent=list.length+" / "+V.length;
- $("empty").classList.toggle("hidden",list.length>0);
-}
-$("rows").addEventListener("click",function(e){
- var t=e.target;if(t.tagName!=="A")return;e.preventDefault();
- var run=t.getAttribute("data-run"),save=t.getAttribute("data-save"),src=t.getAttribute("data-src");
- if(run!=null){var it=vaultItem(V[+run].file);if(!it){alert("Not in the vault.");return}t.textContent="…";vaultURL(it).then(function(u){t.textContent="open";window.open(u,"_blank","noopener")}).catch(function(err){t.textContent="open";alert("Could not decrypt: "+(err&&err.message||""))});}
- else if(save!=null){var it2=vaultItem(V[+save].file);saveVault(it2)}
- else if(src!=null){openSource(+src)}
-});
-$("q").addEventListener("input",function(){q=this.value.trim();render()});
-$("sort").addEventListener("change",function(){sortMode=this.value;render()});
-
-/* ---------- source viewer ---------- */
-function openSource(i){
- var d=V[i],it=vaultItem(d.file);
- $("tabSource").style.display="";
- showView("source");
- $("srcTitle").textContent="SourceGrab "+d.ver;
- $("srcMeta").innerHTML="build "+d.seq+" of "+V.length+" · <b>"+fmtB(d.bytes)+"</b> · <b>"+fmtN(d.lines)+" lines</b> · single-file JavaScript";
- $("code").textContent="Decrypting…";$("srcMore").textContent="";
- var run=$("srcRun"),dl=$("srcDl"),cp=$("srcCopy");
- run.onclick=function(e){e.preventDefault();if(!it){alert("Not in the vault.");return}run.textContent="Decrypting…";vaultURL(it).then(function(u){run.textContent="Open";window.open(u,"_blank","noopener")}).catch(function(err){run.textContent="Open";alert("Could not decrypt: "+(err&&err.message||""))})};
- dl.onclick=function(e){e.preventDefault();if(it)saveVault(it)};
- if(!it){$("code").textContent="This build is not in the vault.";return}
- vaultBytes(it).then(function(b){
-  var txt=new TextDecoder().decode(b);
-  var lines=txt.split("\n");var head=lines.slice(0,500).join("\n");
-  $("code").textContent=head;
-  if(lines.length>500)$("srcMore").textContent="Showing the first 500 of "+fmtN(lines.length)+" lines — use Open or Download for the whole file.";
-  cp.onclick=function(e){e.preventDefault();navigator.clipboard&&navigator.clipboard.writeText(txt);cp.textContent="Copied";setTimeout(function(){cp.textContent="Copy"},1200)};
- }).catch(function(err){$("code").textContent="Could not decrypt: "+(err&&err.message||"unknown error")});
-}
-
-/* ---------- unlock ---------- */
+/* ---- unlock ---- */
 function vsetmsg(t,bad){var m=$("vmsg");m.textContent=t;m.className="vmsg"+(bad?" bad":"")}
 function vtry(pw){
- var go=$("vgo");go.disabled=true;vsetmsg("deriving the key…");var man;
+ var go=$("vgo");go.disabled=true;vsetmsg("deriving the key\u2026");
+ var man;
  return fetch("./vault/manifest.json",{cache:"no-store"})
   .then(function(r){if(!r.ok)throw new Error("manifest-missing");return r.json()})
   .then(function(j){man=j;return vunwrap(pw,man)})
-  .then(function(k){VKEY=k;VMAN=man;go.disabled=false;$("vlock").classList.add("off");vaultReady();})
-  .catch(function(e){go.disabled=false;vsetmsg(e&&e.message==="manifest-missing"?"The vault manifest is not on this site yet.":"That did not open anything. Check the password.",true);$("vpw").select();});
+  .then(function(k){
+    VKEY=k;VMAN=man;go.disabled=false;
+    try{sessionStorage.removeItem("sourcegrab.vault.pw")}catch(e){}
+    $("vlock").classList.add("off");
+    vaultReady();
+  })
+  .catch(function(e){
+    go.disabled=false;
+    vsetmsg(e&&e.message==="manifest-missing"?"The vault manifest is not on this site yet."
+      :"That did not open anything. Check the password.",true);
+    $("vpw").select();
+  });
 }
 function vaultReady(){
- var enc=0;(VMAN.items||[]).forEach(function(i){enc+=i.enc||0});
- $("stCipher").textContent=fmtB(enc);
- $("vaultTag").textContent=(VMAN.items||[]).length+" encrypted payloads · "+fmtB(enc)+" of ciphertext · PBKDF2-SHA256 "+(VMAN.iterations||0).toLocaleString()+" iterations · AES-256-GCM";
- paintHome();render();
- var h=(location.hash||"").replace("#","");
- if(h==="builds")showView("builds");else showView("home");
+ var n=VMAN.items.length, enc=0;
+ VMAN.items.forEach(function(i){enc+=i.enc||0});
+ var tag=$("vaultTag");
+ if(tag)tag.textContent=n+" encrypted payloads \u00b7 "+fmtB(enc)+" of ciphertext \u00b7 PBKDF2-SHA256 "
+   +(VMAN.iterations||0).toLocaleString()+" iterations \u00b7 AES-256-GCM";
+ buildVaultExtras();
 }
-$("vgo").addEventListener("click",function(){vtry($("vpw").value)});
-$("vpw").addEventListener("keydown",function(e){if(e.key==="Enter")vtry(this.value)});
+/* the payloads that are not numbered builds: current source, the Rust
+   shell, the module library */
+function buildVaultExtras(){
+ var host=$("vaultExtras"); if(!host)return;
+ var extras=VMAN.items.filter(function(i){return i.kind!=="build"});
+ if(!extras.length){host.innerHTML='<div class="vpad">Nothing else filed here.</div>';return}
+ host.innerHTML="";
+ extras.forEach(function(it){
+  var b=document.createElement("button");
+  b.className="srcbtn";b.style.margin="0 8px 8px 0";
+  b.textContent=it.name+"  \u00b7  "+fmtB(it.bytes);
+  b.addEventListener("click",function(){saveVault(it,null)});
+  host.appendChild(b);
+ });
+}
+(function(){
+ var ol=$("openLatest");
+ if(!ol)return;
+ ol.addEventListener("click",function(ev){
+  ev.preventDefault();
+  var d=V[V.length-1], it=vaultItem(d.file);
+  if(!it){alert("The latest build is not in the vault.");return}
+  ol.textContent="Decrypting\u2026";
+  vaultURL(it).then(function(u){ol.textContent="Open latest \u2014 "+d.ver;window.open(u,"_blank","noopener")})
+   .catch(function(e){ol.textContent="Open latest \u2014 "+d.ver;alert("Could not decrypt that: "+(e&&e.message||""))});
+ });
+})();
+$("vgo").addEventListener("click",function(){
+ var v=$("vpw").value; if(!v){vsetmsg("Type the password.",true);return} vtry(v)});
+$("vpw").addEventListener("keydown",function(ev){if(ev.key==="Enter")$("vgo").click()});
+(function(){
+ var pw=null; try{pw=sessionStorage.getItem("sourcegrab.vault.pw")}catch(e){}
+ if(pw){try{sessionStorage.removeItem("sourcegrab.vault.pw")}catch(e){} $("vpw").value=pw; vtry(pw);}
+ else{setTimeout(function(){try{$("vpw").focus()}catch(e){}},80)}
+})();
 
-/* ---------- theme ---------- */
-(function(){var b=$("themeBtn");function ap(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("sourcegrab-vault-theme",t)}catch(e){}}
- try{var s=localStorage.getItem("sourcegrab-vault-theme");if(s)ap(s)}catch(e){}
- b.onclick=function(){ap(document.documentElement.getAttribute("data-theme")==="alt"?"dark":"alt")};})();
-
-/* paint the locked-state header numbers from VERSIONS even before unlock */
-(function(){var n=V.length,last=V[n-1]||{},first=V[0]||{};
- $("hdrCount").textContent=n;$("hdrFirst").textContent=first.ver||"—";$("hdrLast").textContent=last.ver||"—";
- $("stBuilds").textContent=n;$("stLatest").textContent=last.ver||"—";$("stLines").textContent=fmtN(last.lines);})();
-$("vpw").focus();
-</script>
-</body></html>
+})();
+</script><button class="btt" id="btt" aria-label="Back to top" title="Back to top">↑</button><script>(function(){function init(){var b=document.getElementById("btt");if(!b)return;
+function up(){var el=document.documentElement;
+ if(window.scrollTo){if(el&&el.style&&("scrollBehavior" in el.style)){window.scrollTo({top:0,behavior:"smooth"})}else{window.scrollTo(0,0)}}
+ else{if(el)el.scrollTop=0;if(document.body)document.body.scrollTop=0}}
+b.addEventListener("click",up);
+function chk(){var y=window.pageYOffset||((document.documentElement&&document.documentElement.scrollTop)||0);
+ b.classList.toggle("show",y>500)}
+if(window.addEventListener){window.addEventListener("scroll",chk,{passive:true});}
+chk();}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{init()}
+})();</script></body></html>
