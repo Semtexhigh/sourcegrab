@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%230b0b0c%27/%3E%3Ccircle cx=%278%27 cy=%278%27 r=%274%27 fill=%27none%27 stroke=%27%2300e5ff%27 stroke-width=%271.4%27/%3E%3C/svg%3E"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SourceGrab</title>
+<style>
+:root{--bg:#0b0b0c;--pane:#141417;--line:#2a2a2e;--ink:#f4f4f5;--dim:#9a9aa2;--acc:#00e5ff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:34px 20px 80px}
+.topmail{float:right;color:var(--dim);font-size:12px;text-decoration:none}
+.kicker{color:var(--acc);letter-spacing:.22em;text-transform:uppercase;font-size:11px}
+h1{font-size:30px;margin:6px 0 4px;font-weight:650}
+h1 span{color:var(--dim);font-weight:400}
+.sub{color:var(--dim);max-width:680px}
+nav.tabs{display:flex;gap:6px;margin:24px 0 20px;border-bottom:1px solid var(--line)}
+nav.tabs a{padding:9px 14px;text-decoration:none;color:var(--dim);border-bottom:2px solid transparent;font-size:13px}
+nav.tabs a.on{color:var(--ink);border-bottom-color:var(--acc)}
+.card{background:var(--pane);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 14px}
+.card h2{font-size:15px;margin:0 0 10px;letter-spacing:.04em}
+ol,ul{margin:0;padding-left:20px}
+li{margin:4px 0;color:var(--dim)}
+li b{color:var(--ink);font-weight:600}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 6px}
+.bbtn{display:inline-block;padding:11px 18px;border:1px solid var(--line);border-radius:10px;background:var(--pane);text-decoration:none;font-size:13px}
+.bbtn:hover{border-color:var(--acc)}
+.bbtn.on{border-color:var(--acc);color:var(--acc)}
+.foot{color:var(--dim);font-size:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:16px}
+.foot a{color:var(--acc);text-decoration:none}
+</style></head><body>
+<div class="wrap">
+ <a class="topmail" href="mailto:67ace67a@gmail.com">67ace67a@gmail.com</a>
+ <div class="kicker">Semtexhigh</div>
+ <h1>SourceGrab <span>/ page source, bundled for an AI</span></h1>
+ <p class="sub">A Chrome (MV3) extension that captures a web page&#8217;s full source &mdash; rendered DOM
+    including open shadow roots, original HTML and response headers, inline and external scripts, templates,
+    CSS, same-origin iframes, page globals, storage keys and the network list &mdash; plus a page-map summary,
+    and bundles it all for pasting into an AI. It runs as a floating holographic HUD on top of the page.</p>
+
+ <nav class="tabs">
+  <a class="on" href="./">Home</a>
+  <a href="./vault.html">History</a>
+  <a href="https://semtexhigh.github.io/get-autoclicker/?v=2#/showcase">Showcase</a>
+ </nav>
+
+ <div class="card">
+  <h2>INSTALL &mdash; LOAD UNPACKED</h2>
+  <ol>
+   <li>Open <b>chrome://extensions</b>.</li>
+   <li>Turn on <b>Developer mode</b> (top-right).</li>
+   <li>Click <b>Load unpacked</b> and choose the SourceGrab folder (the one with <b>manifest.json</b>).</li>
+   <li>Pin the SourceGrab icon, open any normal page, and click it &mdash; the HUD appears.</li>
+  </ol>
+ </div>
+
+ <div class="card">
+  <h2>WHAT IT DOES</h2>
+  <ul>
+   <li>Grabs the whole rendered page and bundles it for an AI, with a page-map summary.</li>
+   <li><b>Remove rubbish</b> drops libraries, framework runtime, trackers and duplicates &mdash; and shows the tokens saved.</li>
+   <li>Target-lock picker and right-click &ldquo;grab this element&rdquo; pull a single element.</li>
+   <li><b>Save page .html</b> writes one self-contained offline file, with minor Base64/<code>atob()</code> obfuscation decoded.</li>
+   <li>7 colour themes (incl. mono + light) and a 17-language UI. No network calls; nothing leaves the browser.</li>
+  </ul>
+ </div>
+
+ <div class="btnrow">
+  <a class="bbtn on" href="./vault.html">Build history &amp; source (password)</a>
+ </div>
+ <p class="sub" style="font-size:12px;margin-top:8px">Every build and its source is encrypted on the History page.
+    The password derives the key &mdash; a wrong one simply opens nothing.</p>
+
+ <div class="foot">
+  Built by <b>Semtexhigh</b> &middot; <a href="mailto:67ace67a@gmail.com">67ace67a@gmail.com</a>
+  &middot; GitHub <a href="https://github.com/Semtexhigh">Semtexhigh</a><br>
+  Solana <span style="word-break:break-all">8gShJdd29gLhwuB2uxf8K63EGQkYrdYSeWJSWFSyXgfx</span>.
+  Not affiliated with any site you point it at. All rights reserved.
+ </div>
+</div>
+</body></html>
